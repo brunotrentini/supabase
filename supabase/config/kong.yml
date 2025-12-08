@@ -1,0 +1,52 @@
+_format_version: "2.1"
+
+services:
+  - name: auth
+    url: http://auth:9999
+    routes:
+      - name: auth-route
+        paths:
+          - /auth/v1
+        strip_path: false
+        preserve_host: true
+        methods:
+          - GET
+          - POST
+          - OPTIONS
+
+plugins:
+  # Permite Supabase Auth funcionar corretamente atrás do proxy
+  - name: cors
+    service: auth
+    config:
+      origins:
+        - "*"
+      methods:
+        - GET
+        - POST
+        - OPTIONS
+      headers:
+        - Authorization
+        - Content-Type
+        - apikey
+        - jwt
+      exposed_headers:
+        - Authorization
+        - apikey
+        - jwt
+      credentials: true
+      max_age: 3600
+
+  # Aceita requisições externas sem exigir API-Key (fix para /auth/v1/recover)
+  - name: request-transformer
+    service: auth
+    config:
+      remove:
+        headers:
+          - x-api-key
+
+  # Log para debugging (opcional, mas útil no seu caso)
+  - name: file-log
+    config:
+      path: /tmp/kong-auth.log
+      reopen: true
