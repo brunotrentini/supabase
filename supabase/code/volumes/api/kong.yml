@@ -77,6 +77,7 @@ services:
       - name: key-auth
         config:
           hide_credentials: false
+          key_in_query: true
 #      - name: acl
 #        config:
 #          hide_groups_header: true
