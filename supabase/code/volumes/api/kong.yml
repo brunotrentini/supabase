@@ -37,7 +37,9 @@ services:
 
   ##################################
   # Open Auth routes (públicas)
+  # IMPORTANTE: Estas rotas DEVEM vir ANTES da rota genérica /auth/v1/
   ##################################
+  
   - name: auth-v1-open-verify
     url: http://auth:9999/verify
     routes:
@@ -78,8 +80,39 @@ services:
     plugins:
       - name: cors
 
+  - name: auth-v1-open-confirm
+    url: http://auth:9999/confirm
+    routes:
+      - name: auth-v1-open-confirm
+        strip_path: true
+        paths:
+          - /auth/v1/confirm
+    plugins:
+      - name: cors
+
+  - name: auth-v1-open-signup
+    url: http://auth:9999/signup
+    routes:
+      - name: auth-v1-open-signup
+        strip_path: true
+        paths:
+          - /auth/v1/signup
+    plugins:
+      - name: cors
+
+  - name: auth-v1-open-token
+    url: http://auth:9999/token
+    routes:
+      - name: auth-v1-open-token
+        strip_path: true
+        paths:
+          - /auth/v1/token
+    plugins:
+      - name: cors
+
   ##################################
   # Secure Auth routes (/auth/v1/**)
+  # Esta rota genérica pega todo o resto
   ##################################
   - name: auth-v1
     url: http://auth:9999/
@@ -90,15 +123,21 @@ services:
           - /auth/v1/
     plugins:
       - name: cors
-      # 🔥 REMOVIDO key-auth aqui porque quebra magic link
-      # 🔥 REMOVIDO key_in_query pois não funciona com magic link
+      - name: key-auth
+        config:
+          hide_credentials: true
+      - name: acl
+        config:
+          hide_groups_header: true
+          allow:
+            - admin
+            - anon
 
   ##################################
   # Secure REST routes
   ##################################
   - name: rest-v1
     url: http://rest:3000/
-    _comment: "PostgREST: /rest/v1/* -> http://rest:3000/*"
     routes:
       - name: rest-v1-all
         strip_path: true
@@ -121,12 +160,11 @@ services:
   ##################################
   - name: graphql-v1
     url: http://rest:3000/rpc/graphql
-    _comment: "GraphQL: /graphql/v1/* -> http://rest:3000/rpc/graphql"
     routes:
       - name: graphql-v1-all
         strip_path: true
         paths:
-          - /graphql/v1
+          - /graphql/v1/
     plugins:
       - name: cors
       - name: key-auth
@@ -150,7 +188,6 @@ services:
   - name: realtime-v1-ws
     url: http://realtime-dev.supabase-realtime:4000/socket
     protocol: ws
-    _comment: "Realtime WS"
     routes:
       - name: realtime-v1-ws
         strip_path: true
@@ -171,12 +208,11 @@ services:
   - name: realtime-v1-rest
     url: http://realtime-dev.supabase-realtime:4000/api
     protocol: http
-    _comment: "Realtime REST"
     routes:
       - name: realtime-v1-rest
         strip_path: true
         paths:
-          - /realtime/v1/api
+          - /realtime/v1/api/
     plugins:
       - name: cors
       - name: key-auth
@@ -194,7 +230,6 @@ services:
   ##################################
   - name: storage-v1
     url: http://storage:5000/
-    _comment: "Storage: /storage/v1/*"
     routes:
       - name: storage-v1-all
         strip_path: true
@@ -208,7 +243,6 @@ services:
   ##################################
   - name: functions-v1
     url: http://functions:9000/
-    _comment: "Functions: /functions/v1/*"
     routes:
       - name: functions-v1-all
         strip_path: true
@@ -222,19 +256,19 @@ services:
   ##################################
   - name: analytics-v1
     url: http://analytics:4000/
-    _comment: "Analytics: /analytics/v1/*"
     routes:
       - name: analytics-v1-all
         strip_path: true
         paths:
           - /analytics/v1/
+    plugins:
+      - name: cors
 
   ##################################
   # Meta (pg-meta)
   ##################################
   - name: meta
     url: http://meta:8080/
-    _comment: "pg-meta: /pg/*"
     routes:
       - name: meta-all
         strip_path: true
@@ -255,7 +289,6 @@ services:
   ##################################
   - name: dashboard
     url: http://studio:3000/
-    _comment: "Studio: /*"
     routes:
       - name: dashboard-all
         strip_path: true
