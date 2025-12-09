@@ -41,74 +41,123 @@ services:
   ##################################
   
   - name: auth-v1-open-verify
-    url: http://auth:9999/verify
+    url: http://auth:9999/
     routes:
       - name: auth-v1-open-verify-route
         strip_path: true
         paths:
           - /auth/v1/verify
+        methods:
+          - GET
+          - POST
     plugins:
       - name: cors
+      - name: request-transformer
+        config:
+          replace:
+            uri: /verify
 
   - name: auth-v1-open-callback
-    url: http://auth:9999/callback
+    url: http://auth:9999/
     routes:
       - name: auth-v1-open-callback-route
         strip_path: true
         paths:
           - /auth/v1/callback
+        methods:
+          - GET
+          - POST
     plugins:
       - name: cors
+      - name: request-transformer
+        config:
+          replace:
+            uri: /callback
 
   - name: auth-v1-open-authorize
-    url: http://auth:9999/authorize
+    url: http://auth:9999/
     routes:
       - name: auth-v1-open-authorize-route
         strip_path: true
         paths:
           - /auth/v1/authorize
+        methods:
+          - GET
+          - POST
     plugins:
       - name: cors
+      - name: request-transformer
+        config:
+          replace:
+            uri: /authorize
 
   - name: auth-v1-open-recover
-    url: http://auth:9999/recover
+    url: http://auth:9999/
     routes:
       - name: auth-v1-open-recover-route
         strip_path: true
         paths:
           - /auth/v1/recover
+        methods:
+          - GET
+          - POST
     plugins:
       - name: cors
+      - name: request-transformer
+        config:
+          replace:
+            uri: /recover
 
   - name: auth-v1-open-confirm
-    url: http://auth:9999/confirm
+    url: http://auth:9999/
     routes:
       - name: auth-v1-open-confirm-route
         strip_path: true
         paths:
           - /auth/v1/confirm
+        methods:
+          - GET
+          - POST
     plugins:
       - name: cors
+      - name: request-transformer
+        config:
+          replace:
+            uri: /confirm
 
   - name: auth-v1-open-signup
-    url: http://auth:9999/signup
+    url: http://auth:9999/
     routes:
       - name: auth-v1-open-signup-route
         strip_path: true
         paths:
           - /auth/v1/signup
+        methods:
+          - GET
+          - POST
     plugins:
       - name: cors
+      - name: request-transformer
+        config:
+          replace:
+            uri: /signup
 
   - name: auth-v1-open-token
-    url: http://auth:9999/token
+    url: http://auth:9999/
     routes:
       - name: auth-v1-open-token-route
         strip_path: true
         paths:
           - /auth/v1/token
+        methods:
+          - GET
+          - POST
     plugins:
       - name: cors
+      - name: request-transformer
+        config:
+          replace:
+            uri: /token
 
   ##################################
   # Secure Auth routes (/auth/v1/**)
