@@ -1,47 +1,43 @@
 _format_version: "2.1"
 _transform: true
 
-#################################
+##################################
 # Consumers / Users
-#################################
+##################################
 consumers:
   - username: DASHBOARD
-
   - username: anon
     keyauth_credentials:
       - key: $SUPABASE_ANON_KEY
-
   - username: service_role
     keyauth_credentials:
       - key: $SUPABASE_SERVICE_KEY
 
-#################################
+##################################
 # Access Control List
-#################################
+##################################
 acls:
   - consumer: anon
     group: anon
-
   - consumer: service_role
     group: admin
 
-#################################
+##################################
 # Dashboard credentials
-#################################
+##################################
 basicauth_credentials:
   - consumer: DASHBOARD
     username: $DASHBOARD_USERNAME
     password: $DASHBOARD_PASSWORD
 
-#################################
+##################################
 # Services / Routes
-#################################
+##################################
 services:
 
-  #################################
+  ##################################
   # Open Auth routes (públicas)
-  #################################
-
+  ##################################
   - name: auth-v1-open-verify
     url: http://auth:9999/verify
     routes:
@@ -82,9 +78,9 @@ services:
     plugins:
       - name: cors
 
-  #################################
+  ##################################
   # Secure Auth routes (/auth/v1/**)
-  #################################
+  ##################################
   - name: auth-v1
     url: http://auth:9999/
     routes:
@@ -94,14 +90,12 @@ services:
           - /auth/v1/
     plugins:
       - name: cors
-      - name: key-auth
-        config:
-          hide_credentials: false
-          key_in_query: true
+      # 🔥 REMOVIDO key-auth aqui porque quebra magic link
+      # 🔥 REMOVIDO key_in_query pois não funciona com magic link
 
-  #################################
+  ##################################
   # Secure REST routes
-  #################################
+  ##################################
   - name: rest-v1
     url: http://rest:3000/
     _comment: "PostgREST: /rest/v1/* -> http://rest:3000/*"
@@ -122,9 +116,9 @@ services:
             - admin
             - anon
 
-  #################################
+  ##################################
   # Secure GraphQL routes
-  #################################
+  ##################################
   - name: graphql-v1
     url: http://rest:3000/rpc/graphql
     _comment: "GraphQL: /graphql/v1/* -> http://rest:3000/rpc/graphql"
@@ -150,9 +144,9 @@ services:
             - admin
             - anon
 
-  #################################
+  ##################################
   # Realtime routes
-  #################################
+  ##################################
   - name: realtime-v1-ws
     url: http://realtime-dev.supabase-realtime:4000/socket
     protocol: ws
@@ -195,9 +189,9 @@ services:
             - admin
             - anon
 
-  #################################
+  ##################################
   # Storage routes
-  #################################
+  ##################################
   - name: storage-v1
     url: http://storage:5000/
     _comment: "Storage: /storage/v1/*"
@@ -209,9 +203,9 @@ services:
     plugins:
       - name: cors
 
-  #################################
+  ##################################
   # Functions routes
-  #################################
+  ##################################
   - name: functions-v1
     url: http://functions:9000/
     _comment: "Functions: /functions/v1/*"
@@ -223,9 +217,9 @@ services:
     plugins:
       - name: cors
 
-  #################################
+  ##################################
   # Analytics routes
-  #################################
+  ##################################
   - name: analytics-v1
     url: http://analytics:4000/
     _comment: "Analytics: /analytics/v1/*"
@@ -235,9 +229,9 @@ services:
         paths:
           - /analytics/v1/
 
-  #################################
+  ##################################
   # Meta (pg-meta)
-  #################################
+  ##################################
   - name: meta
     url: http://meta:8080/
     _comment: "pg-meta: /pg/*"
@@ -256,9 +250,9 @@ services:
           allow:
             - admin
 
-  #################################
+  ##################################
   # Studio Dashboard (catch all)
-  #################################
+  ##################################
   - name: dashboard
     url: http://studio:3000/
     _comment: "Studio: /*"
