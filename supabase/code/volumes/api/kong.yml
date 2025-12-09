@@ -34,55 +34,56 @@ basicauth_credentials:
 ### API Routes
 ###
 services:
-  ## Open Auth routes
-  - name: auth-v1-open
-    url: http://auth:9999/verify
-    routes:
-      - name: auth-v1-open
-        strip_path: true
-        paths:
-          - /auth/v1/verify
-    plugins:
-      - name: cors
-  - name: auth-v1-open-callback
-    url: http://auth:9999/callback
-    routes:
-      - name: auth-v1-open-callback
-        strip_path: true
-        paths:
-          - /auth/v1/callback
-    plugins:
-      - name: cors
-  - name: auth-v1-open-authorize
-    url: http://auth:9999/authorize
-    routes:
-      - name: auth-v1-open-authorize
-        strip_path: true
-        paths:
-          - /auth/v1/authorize
-    plugins:
-      - name: cors
+## Open Auth routes (públicas)
+- name: auth-v1-open-verify
+  url: http://auth:9999/verify
+  routes:
+    - strip_path: true
+      paths:
+        - /auth/v1/verify
+  plugins:
+    - name: cors
 
-  ## Secure Auth routes
-  - name: auth-v1
-    _comment: 'GoTrue: /auth/v1/* -> http://auth:9999/*'
-    url: http://auth:9999/
-    routes:
-      - name: auth-v1-all
-        strip_path: true
-        paths:
-          - /auth/v1/
-    plugins:
-      - name: cors
-      - name: key-auth
-        config:
-          hide_credentials: false
-          key_in_query: true
-#      - name: acl
-#        config:
-#          hide_groups_header: true
-#          allow:
-#            - admin
+- name: auth-v1-open-callback
+  url: http://auth:9999/callback
+  routes:
+    - strip_path: true
+      paths:
+        - /auth/v1/callback
+  plugins:
+    - name: cors
+
+- name: auth-v1-open-authorize
+  url: http://auth:9999/authorize
+  routes:
+    - strip_path: true
+      paths:
+        - /auth/v1/authorize
+  plugins:
+    - name: cors
+
+- name: auth-v1-open-recover
+  url: http://auth:9999/recover
+  routes:
+    - strip_path: true
+      paths:
+        - /auth/v1/recover
+  plugins:
+    - name: cors
+
+## Secure Auth routes (privadas)
+- name: auth-v1
+  url: http://auth:9999/
+  routes:
+    - strip_path: true
+      paths:
+        - /auth/v1/
+  plugins:
+    - name: cors
+    - name: key-auth
+      config:
+        hide_credentials: false
+        key_in_query: true
 
   ## Secure REST routes
   - name: rest-v1
