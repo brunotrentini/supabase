@@ -43,7 +43,7 @@ services:
   - name: auth-v1-open-verify
     url: http://auth:9999/verify
     routes:
-      - name: auth-v1-open-verify
+      - name: auth-v1-open-verify-route
         strip_path: true
         paths:
           - /auth/v1/verify
@@ -53,7 +53,7 @@ services:
   - name: auth-v1-open-callback
     url: http://auth:9999/callback
     routes:
-      - name: auth-v1-open-callback
+      - name: auth-v1-open-callback-route
         strip_path: true
         paths:
           - /auth/v1/callback
@@ -63,7 +63,7 @@ services:
   - name: auth-v1-open-authorize
     url: http://auth:9999/authorize
     routes:
-      - name: auth-v1-open-authorize
+      - name: auth-v1-open-authorize-route
         strip_path: true
         paths:
           - /auth/v1/authorize
@@ -73,7 +73,7 @@ services:
   - name: auth-v1-open-recover
     url: http://auth:9999/recover
     routes:
-      - name: auth-v1-open-recover
+      - name: auth-v1-open-recover-route
         strip_path: true
         paths:
           - /auth/v1/recover
@@ -83,7 +83,7 @@ services:
   - name: auth-v1-open-confirm
     url: http://auth:9999/confirm
     routes:
-      - name: auth-v1-open-confirm
+      - name: auth-v1-open-confirm-route
         strip_path: true
         paths:
           - /auth/v1/confirm
@@ -93,7 +93,7 @@ services:
   - name: auth-v1-open-signup
     url: http://auth:9999/signup
     routes:
-      - name: auth-v1-open-signup
+      - name: auth-v1-open-signup-route
         strip_path: true
         paths:
           - /auth/v1/signup
@@ -103,7 +103,7 @@ services:
   - name: auth-v1-open-token
     url: http://auth:9999/token
     routes:
-      - name: auth-v1-open-token
+      - name: auth-v1-open-token-route
         strip_path: true
         paths:
           - /auth/v1/token
@@ -117,7 +117,7 @@ services:
   - name: auth-v1
     url: http://auth:9999/
     routes:
-      - name: auth-v1-all
+      - name: auth-v1-all-route
         strip_path: true
         paths:
           - /auth/v1/
@@ -139,7 +139,7 @@ services:
   - name: rest-v1
     url: http://rest:3000/
     routes:
-      - name: rest-v1-all
+      - name: rest-v1-all-route
         strip_path: true
         paths:
           - /rest/v1/
@@ -161,7 +161,7 @@ services:
   - name: graphql-v1
     url: http://rest:3000/rpc/graphql
     routes:
-      - name: graphql-v1-all
+      - name: graphql-v1-all-route
         strip_path: true
         paths:
           - /graphql/v1/
@@ -174,7 +174,7 @@ services:
         config:
           add:
             headers:
-              - "Content-Profile:graphql_public"
+              - Content-Profile:graphql_public
       - name: acl
         config:
           hide_groups_header: true
@@ -189,7 +189,7 @@ services:
     url: http://realtime-dev.supabase-realtime:4000/socket
     protocol: ws
     routes:
-      - name: realtime-v1-ws
+      - name: realtime-v1-ws-route
         strip_path: true
         paths:
           - /realtime/v1/
@@ -209,7 +209,7 @@ services:
     url: http://realtime-dev.supabase-realtime:4000/api
     protocol: http
     routes:
-      - name: realtime-v1-rest
+      - name: realtime-v1-rest-route
         strip_path: true
         paths:
           - /realtime/v1/api/
@@ -231,7 +231,7 @@ services:
   - name: storage-v1
     url: http://storage:5000/
     routes:
-      - name: storage-v1-all
+      - name: storage-v1-all-route
         strip_path: true
         paths:
           - /storage/v1/
@@ -244,7 +244,7 @@ services:
   - name: functions-v1
     url: http://functions:9000/
     routes:
-      - name: functions-v1-all
+      - name: functions-v1-all-route
         strip_path: true
         paths:
           - /functions/v1/
@@ -257,7 +257,7 @@ services:
   - name: analytics-v1
     url: http://analytics:4000/
     routes:
-      - name: analytics-v1-all
+      - name: analytics-v1-all-route
         strip_path: true
         paths:
           - /analytics/v1/
@@ -270,7 +270,7 @@ services:
   - name: meta
     url: http://meta:8080/
     routes:
-      - name: meta-all
+      - name: meta-all-route
         strip_path: true
         paths:
           - /pg/
@@ -290,7 +290,7 @@ services:
   - name: dashboard
     url: http://studio:3000/
     routes:
-      - name: dashboard-all
+      - name: dashboard-all-route
         strip_path: true
         paths:
           - /
