@@ -77,11 +77,11 @@ services:
       - name: key-auth
         config:
           hide_credentials: false
-      - name: acl
-        config:
-          hide_groups_header: true
-          allow:
-            - admin
+#      - name: acl
+#        config:
+#          hide_groups_header: true
+#          allow:
+#            - admin
 
   ## Secure REST routes
   - name: rest-v1
