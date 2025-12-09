@@ -1,94 +1,110 @@
-_format_version: '2.1'
+_format_version: "2.1"
 _transform: true
 
-###
-### Consumers / Users
-###
+#################################
+# Consumers / Users
+#################################
 consumers:
   - username: DASHBOARD
+
   - username: anon
     keyauth_credentials:
       - key: $SUPABASE_ANON_KEY
+
   - username: service_role
     keyauth_credentials:
       - key: $SUPABASE_SERVICE_KEY
 
-###
-### Access Control List
-###
+#################################
+# Access Control List
+#################################
 acls:
   - consumer: anon
     group: anon
+
   - consumer: service_role
     group: admin
 
-###
-### Dashboard credentials
-###
+#################################
+# Dashboard credentials
+#################################
 basicauth_credentials:
   - consumer: DASHBOARD
     username: $DASHBOARD_USERNAME
     password: $DASHBOARD_PASSWORD
 
-###
-### API Routes
-###
+#################################
+# Services / Routes
+#################################
 services:
-## Open Auth routes (públicas)
-- name: auth-v1-open-verify
-  url: http://auth:9999/verify
-  routes:
-    - strip_path: true
-      paths:
-        - /auth/v1/verify
-  plugins:
-    - name: cors
 
-- name: auth-v1-open-callback
-  url: http://auth:9999/callback
-  routes:
-    - strip_path: true
-      paths:
-        - /auth/v1/callback
-  plugins:
-    - name: cors
+  #################################
+  # Open Auth routes (públicas)
+  #################################
 
-- name: auth-v1-open-authorize
-  url: http://auth:9999/authorize
-  routes:
-    - strip_path: true
-      paths:
-        - /auth/v1/authorize
-  plugins:
-    - name: cors
+  - name: auth-v1-open-verify
+    url: http://auth:9999/verify
+    routes:
+      - name: auth-v1-open-verify
+        strip_path: true
+        paths:
+          - /auth/v1/verify
+    plugins:
+      - name: cors
 
-- name: auth-v1-open-recover
-  url: http://auth:9999/recover
-  routes:
-    - strip_path: true
-      paths:
-        - /auth/v1/recover
-  plugins:
-    - name: cors
+  - name: auth-v1-open-callback
+    url: http://auth:9999/callback
+    routes:
+      - name: auth-v1-open-callback
+        strip_path: true
+        paths:
+          - /auth/v1/callback
+    plugins:
+      - name: cors
 
-## Secure Auth routes (privadas)
-- name: auth-v1
-  url: http://auth:9999/
-  routes:
-    - strip_path: true
-      paths:
-        - /auth/v1/
-  plugins:
-    - name: cors
-    - name: key-auth
-      config:
-        hide_credentials: false
-        key_in_query: true
+  - name: auth-v1-open-authorize
+    url: http://auth:9999/authorize
+    routes:
+      - name: auth-v1-open-authorize
+        strip_path: true
+        paths:
+          - /auth/v1/authorize
+    plugins:
+      - name: cors
 
-  ## Secure REST routes
+  - name: auth-v1-open-recover
+    url: http://auth:9999/recover
+    routes:
+      - name: auth-v1-open-recover
+        strip_path: true
+        paths:
+          - /auth/v1/recover
+    plugins:
+      - name: cors
+
+  #################################
+  # Secure Auth routes (/auth/v1/**)
+  #################################
+  - name: auth-v1
+    url: http://auth:9999/
+    routes:
+      - name: auth-v1-all
+        strip_path: true
+        paths:
+          - /auth/v1/
+    plugins:
+      - name: cors
+      - name: key-auth
+        config:
+          hide_credentials: false
+          key_in_query: true
+
+  #################################
+  # Secure REST routes
+  #################################
   - name: rest-v1
-    _comment: 'PostgREST: /rest/v1/* -> http://rest:3000/*'
     url: http://rest:3000/
+    _comment: "PostgREST: /rest/v1/* -> http://rest:3000/*"
     routes:
       - name: rest-v1-all
         strip_path: true
@@ -106,10 +122,12 @@ services:
             - admin
             - anon
 
-  ## Secure GraphQL routes
+  #################################
+  # Secure GraphQL routes
+  #################################
   - name: graphql-v1
-    _comment: 'PostgREST: /graphql/v1/* -> http://rest:3000/rpc/graphql'
     url: http://rest:3000/rpc/graphql
+    _comment: "GraphQL: /graphql/v1/* -> http://rest:3000/rpc/graphql"
     routes:
       - name: graphql-v1-all
         strip_path: true
@@ -124,7 +142,7 @@ services:
         config:
           add:
             headers:
-              - Content-Profile:graphql_public
+              - "Content-Profile:graphql_public"
       - name: acl
         config:
           hide_groups_header: true
@@ -132,11 +150,13 @@ services:
             - admin
             - anon
 
-  ## Secure Realtime routes
+  #################################
+  # Realtime routes
+  #################################
   - name: realtime-v1-ws
-    _comment: 'Realtime: /realtime/v1/* -> ws://realtime:4000/socket/*'
     url: http://realtime-dev.supabase-realtime:4000/socket
     protocol: ws
+    _comment: "Realtime WS"
     routes:
       - name: realtime-v1-ws
         strip_path: true
@@ -153,10 +173,11 @@ services:
           allow:
             - admin
             - anon
+
   - name: realtime-v1-rest
-    _comment: 'Realtime: /realtime/v1/* -> ws://realtime:4000/socket/*'
     url: http://realtime-dev.supabase-realtime:4000/api
     protocol: http
+    _comment: "Realtime REST"
     routes:
       - name: realtime-v1-rest
         strip_path: true
@@ -173,10 +194,13 @@ services:
           allow:
             - admin
             - anon
-  ## Storage routes: the storage server manages its own auth
+
+  #################################
+  # Storage routes
+  #################################
   - name: storage-v1
-    _comment: 'Storage: /storage/v1/* -> http://storage:5000/*'
     url: http://storage:5000/
+    _comment: "Storage: /storage/v1/*"
     routes:
       - name: storage-v1-all
         strip_path: true
@@ -185,10 +209,12 @@ services:
     plugins:
       - name: cors
 
-  ## Edge Functions routes
+  #################################
+  # Functions routes
+  #################################
   - name: functions-v1
-    _comment: 'Edge Functions: /functions/v1/* -> http://functions:9000/*'
     url: http://functions:9000/
+    _comment: "Functions: /functions/v1/*"
     routes:
       - name: functions-v1-all
         strip_path: true
@@ -197,20 +223,24 @@ services:
     plugins:
       - name: cors
 
-  ## Analytics routes
+  #################################
+  # Analytics routes
+  #################################
   - name: analytics-v1
-    _comment: 'Analytics: /analytics/v1/* -> http://logflare:4000/*'
     url: http://analytics:4000/
+    _comment: "Analytics: /analytics/v1/*"
     routes:
       - name: analytics-v1-all
         strip_path: true
         paths:
           - /analytics/v1/
 
-  ## Secure Database routes
+  #################################
+  # Meta (pg-meta)
+  #################################
   - name: meta
-    _comment: 'pg-meta: /pg/* -> http://pg-meta:8080/*'
     url: http://meta:8080/
+    _comment: "pg-meta: /pg/*"
     routes:
       - name: meta-all
         strip_path: true
@@ -226,10 +256,12 @@ services:
           allow:
             - admin
 
-  ## Protected Dashboard - catch all remaining routes
+  #################################
+  # Studio Dashboard (catch all)
+  #################################
   - name: dashboard
-    _comment: 'Studio: /* -> http://studio:3000/*'
     url: http://studio:3000/
+    _comment: "Studio: /*"
     routes:
       - name: dashboard-all
         strip_path: true
