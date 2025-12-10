@@ -347,6 +347,14 @@ services:
         strip_path: false
         paths:
           - /welcome
+      - name: www-magic-link-confirm-route
+        strip_path: false
+        paths:
+          - /magic-link-confirm
+      - name: www-recovery-confirm-route
+        strip_path: false
+        paths:
+          - /recovery-confirm
     plugins:
       - name: cors
 
