@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Definir Nova Senha - Trentech</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3ecf8e;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Definir Nova Senha</h2>
+        
+        <div id="loading" class="text-center py-4">
+            <div class="loader"></div>
+            <p class="mt-2 text-gray-600">Verificando link...</p>
+        </div>
+
+        <div id="error-msg" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <span class="block sm:inline" id="error-text">Link inválido ou expirado.</span>
+        </div>
+
+        <div id="success-msg" class="hidden bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <span class="block sm:inline">Senha atualizada com sucesso! Redirecionando...</span>
+        </div>
+
+        <form id="password-form" class="hidden">
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
+                    Nova Senha
+                </label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password" placeholder="********" required minlength="6">
+            </div>
+            
+            <div class="mb-6">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="confirm-password">
+                    Confirmar Senha
+                </label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="confirm-password" type="password" placeholder="********" required>
+            </div>
+
+            <div class="flex items-center justify-between">
+                <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full transition duration-300" type="submit" id="submit-btn">
+                    Atualizar Senha
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const API_URL = 'https://supabase.trentech.com.br'; // Ajuste se necessário
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Parse hash params
+            const hash = window.location.hash.substring(1);
+            const params = new URLSearchParams(hash);
+            const accessToken = params.get('access_token');
+            const type = params.get('type');
+            const error = params.get('error');
+            const errorDescription = params.get('error_description');
+
+            const loadingDiv = document.getElementById('loading');
+            const form = document.getElementById('password-form');
+            const errorDiv = document.getElementById('error-msg');
+            const errorText = document.getElementById('error-text');
+            const successDiv = document.getElementById('success-msg');
+
+            if (error) {
+                loadingDiv.classList.add('hidden');
+                errorDiv.classList.remove('hidden');
+                errorText.innerText = errorDescription ? decodeURIComponent(errorDescription).replace(/\+/g, ' ') : 'Erro ao validar o link.';
+                return;
+            }
+
+            if (!accessToken || type !== 'recovery') {
+                // Check if user is logged in via session (optional, simpler to require link)
+                loadingDiv.classList.add('hidden');
+                errorDiv.classList.remove('hidden');
+                errorText.innerText = 'Link de recuperação inválido ou ausente.';
+                return;
+            }
+
+            // Valid token found
+            loadingDiv.classList.add('hidden');
+            form.classList.remove('hidden');
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirm-password').value;
+                const submitBtn = document.getElementById('submit-btn');
+
+                if (password !== confirmPassword) {
+                    alert('As senhas não coincidem.');
+                    return;
+                }
+
+                submitBtn.disabled = true;
+                submitBtn.innerText = 'Atualizando...';
+
+                try {
+                    const response = await fetch(`${API_URL}/auth/v1/user`, {
+                        method: 'PUT', // Supabase Auth User Update uses PUT usually
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${accessToken}`
+                        },
+                        body: JSON.stringify({ password: password })
+                    });
+
+                    if (!response.ok) {
+                        const data = await response.json();
+                        throw new Error(data.msg || data.message || 'Erro ao atualizar senha.');
+                    }
+
+                    form.classList.add('hidden');
+                    successDiv.classList.remove('hidden');
+
+                    setTimeout(() => {
+                        window.location.href = '/'; // Redirect to home/login
+                    }, 2000);
+
+                } catch (err) {
+                    alert(err.message);
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = 'Atualizar Senha';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

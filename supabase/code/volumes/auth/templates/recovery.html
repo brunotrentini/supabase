@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperação de Senha</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; background-color: #f4f4f5; margin: 0; padding: 0; }
+        .container { max-width: 600px; margin: 40px auto; background: #ffffff; padding: 40px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .header { text-align: center; margin-bottom: 30px; }
+        .logo { max-height: 50px; }
+        .button { display: inline-block; padding: 12px 24px; background-color: #3ecf8e; color: #ffffff; text-decoration: none; border-radius: 4px; font-weight: 600; margin-top: 20px; }
+        .footer { margin-top: 30px; font-size: 12px; color: #666; text-align: center; }
+        .link { color: #3ecf8e; word-break: break-all; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Recuperação de Senha - Trentech</h2>
+        </div>
+        <p>Olá,</p>
+        <p>Recebemos uma solicitação para redefinir a senha da sua conta.</p>
+        <p>Clique no botão abaixo para criar uma nova senha:</p>
+        <div style="text-align: center;">
+            <a href="{{ .ConfirmationURL }}&redirect_to=https://supabase.trentech.com.br/recovery" class="button">Redefinir Senha</a>
+        </div>
+        <p>Se o botão não funcionar, copie e cole o link abaixo no seu navegador:</p>
+        <p><a href="{{ .ConfirmationURL }}&redirect_to=https://supabase.trentech.com.br/recovery" class="link">{{ .ConfirmationURL }}&redirect_to=https://supabase.trentech.com.br/recovery</a></p>
+        <p>Se você não solicitou esta alteração, por favor ignore este e-mail.</p>
+        <div class="footer">
+            <p>&copy; 2025 Trentech. Todos os direitos reservados.</p>
+        </div>
+    </div>
+</body>
+</html>

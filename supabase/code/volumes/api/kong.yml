@@ -334,6 +334,19 @@ services:
             - admin
 
   ##################################
+  # Custom Frontend (www)
+  ##################################
+  - name: www
+    url: http://www:80/
+    routes:
+      - name: www-recovery-route
+        strip_path: false
+        paths:
+          - /recovery
+    plugins:
+      - name: cors
+
+  ##################################
   # Studio Dashboard (catch all)
   ##################################
   - name: dashboard
