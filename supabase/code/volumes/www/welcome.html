@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bem-vindo - Trentech</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md text-center">
+        <h2 class="text-2xl font-bold mb-4 text-gray-800">Login Realizado com Sucesso!</h2>
+        
+        <p class="text-gray-600 mb-6">Você está autenticado na plataforma.</p>
+
+        <div id="token-info" class="hidden text-left bg-gray-50 p-4 rounded text-xs overflow-auto max-h-40 mb-4">
+            <p class="font-bold">Token de Acesso:</p>
+            <code id="access-token" class="break-all"></code>
+        </div>
+
+        <a href="/" class="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300">
+            Ir para a Home
+        </a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const hash = window.location.hash.substring(1);
+            const params = new URLSearchParams(hash);
+            const accessToken = params.get('access_token');
+            const refreshToken = params.get('refresh_token');
+
+            if (accessToken) {
+                // Aqui você normalmente salvaria o token no localStorage ou cookie
+                // e redirecionaria para a aplicação principal
+                console.log("Token recebido:", accessToken);
+                document.getElementById('token-info').classList.remove('hidden');
+                document.getElementById('access-token').innerText = accessToken;
+
+                // Opcional: Persistir sessão
+                // supabase.auth.setSession(accessToken, refreshToken);
+            }
+        });
+    </script>
+</body>
+</html>

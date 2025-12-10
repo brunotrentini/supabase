@@ -343,6 +343,10 @@ services:
         strip_path: false
         paths:
           - /recovery
+      - name: www-welcome-route
+        strip_path: false
+        paths:
+          - /welcome
     plugins:
       - name: cors
 

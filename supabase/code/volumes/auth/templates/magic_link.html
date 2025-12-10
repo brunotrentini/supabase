@@ -21,10 +21,10 @@
         <p>Olá,</p>
         <p>Aqui está o seu link para entrar na plataforma sem precisar de senha.</p>
         <div style="text-align: center;">
-            <a href="{{ .ConfirmationURL }}&redirect_to=https://supabase.trentech.com.br" class="button">Entrar Agora</a>
+            <a href="{{ .SiteURL }}/auth/v1/verify?token={{ .TokenHash }}&type=magiclink&redirect_to=https://supabase.trentech.com.br/welcome" class="button">Entrar Agora</a>
         </div>
         <p>Se o botão não funcionar, copie e cole o link abaixo no seu navegador:</p>
-        <p><a href="{{ .ConfirmationURL }}&redirect_to=https://supabase.trentech.com.br" class="link">{{ .ConfirmationURL }}&redirect_to=https://supabase.trentech.com.br</a></p>
+        <p><a href="{{ .SiteURL }}/auth/v1/verify?token={{ .TokenHash }}&type=magiclink&redirect_to=https://supabase.trentech.com.br/welcome" class="link">{{ .SiteURL }}/auth/v1/verify?token={{ .TokenHash }}&type=magiclink&redirect_to=https://supabase.trentech.com.br/welcome</a></p>
         <p>Este link expira em breve.</p>
         <div class="footer">
             <p>&copy; 2025 Trentech. Todos os direitos reservados.</p>
