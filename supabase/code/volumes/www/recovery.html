@@ -61,6 +61,7 @@
 
     <script>
         const API_URL = 'https://supabase.trentech.com.br'; // Ajuste se necessário
+        const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyAgCiAgICAicm9sZSI6ICJhbm9uIiwKICAgICJpc3MiOiAic3VwYWJhc2UtZGVtbyIsCiAgICAiaWF0IjogMTY0MTc2OTIwMCwKICAgICJleHAiOiAxNzk5NTM1NjAwCn0.dc_X5iR_VP_qT0zsiyj_I_OZ2T9FtRU2BBNWN8Bu4GE';
 
         document.addEventListener('DOMContentLoaded', () => {
             // Parse hash params
@@ -122,7 +123,8 @@
                         method: 'PUT', // Supabase Auth User Update uses PUT usually
                         headers: {
                             'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${accessToken}`
+                            'Authorization': `Bearer ${accessToken}`,
+                            'apikey': ANON_KEY
                         },
                         body: JSON.stringify({ password: password })
                     });
