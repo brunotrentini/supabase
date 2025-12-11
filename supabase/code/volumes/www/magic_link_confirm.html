@@ -62,28 +62,58 @@
         <h1>Confirmação de Login</h1>
         <p>Você solicitou um link mágico para entrar. Clique no botão abaixo para confirmar e acessar o sistema.</p>
         <button id="confirmBtn" class="btn">Entrar Agora</button>
+        <div id="debugInfo" style="margin-top: 20px; padding: 10px; background: #333; color: #0f0; font-family: monospace; text-align: left; display: none; font-size: 12px; overflow-wrap: break-word;">
+            <h3>Debug Log</h3>
+            <div id="logs"></div>
+        </div>
         <div class="footer">
-            &copy; 2025 TRENTECH
+            &copy; 2025 TRENTECH | <button onclick="document.getElementById('debugInfo').style.display='block'" style="background:none; border:none; color:#666; cursor:pointer;">Show Logs</button>
         </div>
     </div>
 
     <script>
+        function log(msg) {
+            console.log('[MagicLinkConfirm]', msg);
+            const logs = document.getElementById('logs');
+            logs.innerHTML += `<div>> ${msg}</div>`;
+        }
+
         document.getElementById('confirmBtn').addEventListener('click', function() {
             const params = new URLSearchParams(window.location.search);
             const token = params.get('token');
             const type = params.get('type') || 'magiclink';
+            const redirect_to = params.get('redirect_to');
             
+            log(`Token Length: ${token ? token.length : 0}`);
+            log(`Token: ${token}`);
+            log(`Type: ${type}`);
+
             if (!token) {
-                alert('Token inválido ou expirado.');
+                alert('Token inválido ou expirado (Vazio).');
+                log('Error: Token is empty');
                 return;
+            }
+
+            // Check if token looks like a SHA256 hash (64 chars hex)
+            if (token.length === 64 && /^[0-9a-fA-F]+$/.test(token)) {
+                log('WARNING: Token appears to be a SHA256 Hash! The email template might be using {{ .TokenHash }} instead of {{ .Token }}.');
+                alert('Aviso: O token parece ser um hash. Verifique se o template de e-mail foi atualizado corretamente.');
             }
 
             // Constrói a URL da API do Supabase
             // Redireciona para /welcome após o sucesso
-            const targetUrl = `${window.location.origin}/auth/v1/verify?token=${token}&type=${type}&redirect_to=${encodeURIComponent(window.location.origin + '/welcome')}`;
+            const baseUrl = window.location.origin;
+            const targetUrl = `${baseUrl}/auth/v1/verify?token=${token}&type=${type}&redirect_to=${encodeURIComponent(baseUrl + '/welcome')}`;
+            
+            log(`Target URL: ${targetUrl}`);
             
             window.location.href = targetUrl;
         });
+
+        // Auto-log on load
+        const params = new URLSearchParams(window.location.search);
+        log('Page Loaded');
+        log(`Params: ${window.location.search}`);
     </script>
 </body>
 </html>
