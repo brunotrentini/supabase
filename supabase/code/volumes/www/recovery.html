@@ -84,6 +84,13 @@
                 return;
             }
 
+            // Safety net: If magiclink users end up here, redirect them to welcome
+            if (accessToken && type === 'magiclink') {
+                console.log('Redirecting magiclink user to welcome page');
+                window.location.href = '/welcome#' + hash; // Preserve hash
+                return;
+            }
+
             if (!accessToken || type !== 'recovery') {
                 // Check if user is logged in via session (optional, simpler to require link)
                 loadingDiv.classList.add('hidden');

@@ -104,7 +104,15 @@
             // Constrói a URL da API do Supabase
             // Redireciona para /recovery após o sucesso (que é a página onde ele digita a nova senha)
             const baseUrl = window.location.origin;
-            const targetUrl = `${baseUrl}/auth/v1/verify?token=${token}&type=${type}&redirect_to=${encodeURIComponent(baseUrl + '/recovery')}`;
+            
+            // Smart Redirect Logic
+            let targetRedirect = baseUrl + '/recovery';
+            if (type === 'magiclink') {
+                log('Detected magiclink type on recovery-confirm. Redirecting to /welcome instead of /recovery.');
+                targetRedirect = baseUrl + '/welcome';
+            }
+
+            const targetUrl = `${baseUrl}/auth/v1/verify?token=${token}&type=${type}&redirect_to=${encodeURIComponent(targetRedirect)}`;
             
             log(`Target URL: ${targetUrl}`);
             
