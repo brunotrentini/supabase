@@ -41,14 +41,15 @@
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
                     Nova Senha
                 </label>
-                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password" placeholder="********" required minlength="6">
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password" placeholder="********" required minlength="6" autocomplete="new-password">
             </div>
             
             <div class="mb-6">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="confirm-password">
                     Confirmar Senha
                 </label>
-                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="confirm-password" type="password" placeholder="********" required>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline transition-colors duration-200" id="confirm-password" type="password" placeholder="********" required autocomplete="new-password">
+                <p id="password-match-msg" class="text-xs mt-1 hidden"></p>
             </div>
 
             <div class="flex items-center justify-between">
@@ -57,38 +58,42 @@
                 </button>
             </div>
         </form>
-        
-        <!-- Debug Area (Hidden by default) -->
-        <div id="debug-area" class="mt-4 p-2 bg-gray-200 text-xs font-mono hidden">
-            <p class="font-bold">Debug Log:</p>
-            <div id="debug-log"></div>
+    </div>
+
+    <!-- Debug Area -->
+    <div class="fixed bottom-0 right-0 p-2 z-50">
+        <button onclick="document.getElementById('debug-area').classList.toggle('hidden')" class="bg-gray-800 text-white text-xs p-1 rounded opacity-50 hover:opacity-100">
+            Toggle Debug
+        </button>
+    </div>
+    <div id="debug-area" class="hidden fixed bottom-8 right-0 w-full max-w-lg bg-black text-green-400 p-4 h-64 overflow-y-auto text-xs opacity-90 font-mono z-50 border-t-2 border-green-500">
+        <div class="flex justify-between items-center mb-2 border-b border-gray-700 pb-1">
+            <span class="font-bold">Debug Log</span>
+            <button onclick="document.getElementById('debug-log').innerHTML=''" class="text-red-400 hover:text-red-300">Clear</button>
         </div>
-        <div class="text-center mt-2">
-             <button onclick="document.getElementById('debug-area').classList.toggle('hidden')" class="text-xs text-gray-400 underline">Toggle Debug</button>
-        </div>
+        <div id="debug-log"></div>
     </div>
 
     <script>
         const API_URL = 'https://supabase.trentech.com.br'; 
         
         // IMPORTANTE: Substitua esta chave pela sua ANON KEY correta do arquivo .env (ANON_KEY)
-        // A chave abaixo é apenas um placeholder e NÃO funcionará em produção.
         const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlzcyI6InN1cGFiYXNlIiwiaWF0IjoxNzUwMzg4NDAwLCJleHAiOjE5MDgxNTQ4MDB9.d_PrlhP23K6wk44arHZPoU-N-33n1TteXs-PP3bCOoo';
 
         function log(msg) {
             console.log('[Recovery]', msg);
             const debugLog = document.getElementById('debug-log');
-            if(debugLog) debugLog.innerHTML += `<div>${msg}</div>`;
+            if(debugLog) {
+                const entry = document.createElement('div');
+                entry.textContent = `> ${msg}`;
+                entry.className = 'mb-1 border-b border-gray-800 pb-1';
+                debugLog.appendChild(entry);
+                debugLog.scrollTop = debugLog.scrollHeight;
+            }
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            log('Page Loaded v2.1 (Fix API Key)');
-            
-            if (ANON_KEY.includes('supabase-demo')) {
-                log('WARNING: Using default/demo ANON_KEY. This will likely fail signature verification.');
-                console.warn('ATENÇÃO: Você está usando a ANON_KEY de demonstração. Substitua pela chave real no arquivo recovery.html.');
-            }
-
+            log('Recovery Page Loaded');
             // Parse hash params
             const hash = window.location.hash.substring(1);
             const params = new URLSearchParams(hash);
@@ -102,18 +107,48 @@
             const errorDiv = document.getElementById('error-msg');
             const errorText = document.getElementById('error-text');
             const successDiv = document.getElementById('success-msg');
+            
+            // Password Match Validation Logic
+            const passwordInput = document.getElementById('password');
+            const confirmInput = document.getElementById('confirm-password');
+            const matchMsg = document.getElementById('password-match-msg');
+
+            function checkMatch() {
+                const pass = passwordInput.value;
+                const confirm = confirmInput.value;
+
+                if (confirm.length === 0) {
+                    confirmInput.classList.remove('border-green-500', 'border-red-500');
+                    matchMsg.classList.add('hidden');
+                    return;
+                }
+
+                if (pass === confirm) {
+                    confirmInput.classList.remove('border-red-500');
+                    confirmInput.classList.add('border-green-500');
+                    matchMsg.innerText = 'As senhas coincidem';
+                    matchMsg.className = 'text-xs mt-1 text-green-600';
+                } else {
+                    confirmInput.classList.remove('border-green-500');
+                    confirmInput.classList.add('border-red-500');
+                    matchMsg.innerText = 'As senhas não coincidem';
+                    matchMsg.className = 'text-xs mt-1 text-red-600';
+                }
+            }
+
+            passwordInput.addEventListener('input', checkMatch);
+            confirmInput.addEventListener('input', checkMatch);
+
 
             if (error) {
                 loadingDiv.classList.add('hidden');
                 errorDiv.classList.remove('hidden');
                 errorText.innerText = errorDescription ? decodeURIComponent(errorDescription).replace(/\+/g, ' ') : 'Erro ao validar o link.';
-                log(`Error in URL params: ${error} - ${errorDescription}`);
                 return;
             }
 
             // Safety net: If magiclink users end up here, redirect them to welcome
             if (accessToken && type === 'magiclink') {
-                log('Redirecting magiclink user to welcome page');
                 window.location.href = '/welcome#' + hash; // Preserve hash
                 return;
             }
@@ -123,19 +158,17 @@
                 loadingDiv.classList.add('hidden');
                 errorDiv.classList.remove('hidden');
                 errorText.innerText = 'Link de recuperação inválido ou ausente.';
-                log('Missing access_token or wrong type');
                 return;
             }
 
             // Valid token found
             loadingDiv.classList.add('hidden');
             form.classList.remove('hidden');
-            log('Token found, form displayed');
 
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const password = document.getElementById('password').value;
-                const confirmPassword = document.getElementById('confirm-password').value;
+                const password = passwordInput.value;
+                const confirmPassword = confirmInput.value;
                 const submitBtn = document.getElementById('submit-btn');
 
                 if (password !== confirmPassword) {
@@ -152,7 +185,7 @@
                         'Authorization': `Bearer ${accessToken}`,
                         'apikey': ANON_KEY
                     };
-                    
+                 
                     log(`Sending request to ${API_URL}/auth/v1/user`);
                     log(`Headers: apikey=${ANON_KEY.substring(0, 10)}...`);
 
@@ -167,10 +200,11 @@
                         log(`Error response: ${JSON.stringify(data)}`);
                         throw new Error(data.msg || data.message || 'Erro ao atualizar senha.');
                     }
+                    
+                    log('Password updated successfully');
 
                     form.classList.add('hidden');
                     successDiv.classList.remove('hidden');
-                    log('Success!');
 
                     setTimeout(() => {
                         window.location.href = '/'; // Redirect to home/login
@@ -178,7 +212,7 @@
 
                 } catch (err) {
                     log(`Catch Error: ${err.message}`);
-                    alert('Erro: ' + err.message);
+                    alert(err.message);
                     submitBtn.disabled = false;
                     submitBtn.innerText = 'Atualizar Senha';
                 }
