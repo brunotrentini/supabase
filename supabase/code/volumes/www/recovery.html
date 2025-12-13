@@ -57,13 +57,38 @@
                 </button>
             </div>
         </form>
+        
+        <!-- Debug Area (Hidden by default) -->
+        <div id="debug-area" class="mt-4 p-2 bg-gray-200 text-xs font-mono hidden">
+            <p class="font-bold">Debug Log:</p>
+            <div id="debug-log"></div>
+        </div>
+        <div class="text-center mt-2">
+             <button onclick="document.getElementById('debug-area').classList.toggle('hidden')" class="text-xs text-gray-400 underline">Toggle Debug</button>
+        </div>
     </div>
 
     <script>
-        const API_URL = 'https://supabase.trentech.com.br'; // Ajuste se necessário
-        const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyAgCiAgICAicm9sZSI6ICJhbm9uIiwKICAgICJpc3MiOiAic3VwYWJhc2UtZGVtbyIsCiAgICAiaWF0IjogMTY0MTc2OTIwMCwKICAgICJleHAiOiAxNzk5NTM1NjAwCn0.dc_X5iR_VP_qT0zsiyj_I_OZ2T9FtRU2BBNWN8Bu4GE';
+        const API_URL = 'https://supabase.trentech.com.br'; 
+        
+        // IMPORTANTE: Substitua esta chave pela sua ANON KEY correta do arquivo .env (ANON_KEY)
+        // A chave abaixo é apenas um placeholder e NÃO funcionará em produção.
+        const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlzcyI6InN1cGFiYXNlIiwiaWF0IjoxNzUwMzg4NDAwLCJleHAiOjE5MDgxNTQ4MDB9.d_PrlhP23K6wk44arHZPoU-N-33n1TteXs-PP3bCOoo';
+
+        function log(msg) {
+            console.log('[Recovery]', msg);
+            const debugLog = document.getElementById('debug-log');
+            if(debugLog) debugLog.innerHTML += `<div>${msg}</div>`;
+        }
 
         document.addEventListener('DOMContentLoaded', () => {
+            log('Page Loaded v2.1 (Fix API Key)');
+            
+            if (ANON_KEY.includes('supabase-demo')) {
+                log('WARNING: Using default/demo ANON_KEY. This will likely fail signature verification.');
+                console.warn('ATENÇÃO: Você está usando a ANON_KEY de demonstração. Substitua pela chave real no arquivo recovery.html.');
+            }
+
             // Parse hash params
             const hash = window.location.hash.substring(1);
             const params = new URLSearchParams(hash);
@@ -82,12 +107,13 @@
                 loadingDiv.classList.add('hidden');
                 errorDiv.classList.remove('hidden');
                 errorText.innerText = errorDescription ? decodeURIComponent(errorDescription).replace(/\+/g, ' ') : 'Erro ao validar o link.';
+                log(`Error in URL params: ${error} - ${errorDescription}`);
                 return;
             }
 
             // Safety net: If magiclink users end up here, redirect them to welcome
             if (accessToken && type === 'magiclink') {
-                console.log('Redirecting magiclink user to welcome page');
+                log('Redirecting magiclink user to welcome page');
                 window.location.href = '/welcome#' + hash; // Preserve hash
                 return;
             }
@@ -97,12 +123,14 @@
                 loadingDiv.classList.add('hidden');
                 errorDiv.classList.remove('hidden');
                 errorText.innerText = 'Link de recuperação inválido ou ausente.';
+                log('Missing access_token or wrong type');
                 return;
             }
 
             // Valid token found
             loadingDiv.classList.add('hidden');
             form.classList.remove('hidden');
+            log('Token found, form displayed');
 
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
@@ -119,30 +147,38 @@
                 submitBtn.innerText = 'Atualizando...';
 
                 try {
+                    const headers = {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${accessToken}`,
+                        'apikey': ANON_KEY
+                    };
+                    
+                    log(`Sending request to ${API_URL}/auth/v1/user`);
+                    log(`Headers: apikey=${ANON_KEY.substring(0, 10)}...`);
+
                     const response = await fetch(`${API_URL}/auth/v1/user`, {
                         method: 'PUT', // Supabase Auth User Update uses PUT usually
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${accessToken}`,
-                            'apikey': ANON_KEY
-                        },
+                        headers: headers,
                         body: JSON.stringify({ password: password })
                     });
 
                     if (!response.ok) {
                         const data = await response.json();
+                        log(`Error response: ${JSON.stringify(data)}`);
                         throw new Error(data.msg || data.message || 'Erro ao atualizar senha.');
                     }
 
                     form.classList.add('hidden');
                     successDiv.classList.remove('hidden');
+                    log('Success!');
 
                     setTimeout(() => {
                         window.location.href = '/'; // Redirect to home/login
                     }, 2000);
 
                 } catch (err) {
-                    alert(err.message);
+                    log(`Catch Error: ${err.message}`);
+                    alert('Erro: ' + err.message);
                     submitBtn.disabled = false;
                     submitBtn.innerText = 'Atualizar Senha';
                 }
