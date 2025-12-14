@@ -355,6 +355,10 @@ services:
         strip_path: false
         paths:
           - /recovery-confirm
+      - name: www-assets-route
+        strip_path: false
+        paths:
+          - /assets
     plugins:
       - name: cors
 
