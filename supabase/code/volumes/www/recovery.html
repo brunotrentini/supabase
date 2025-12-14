@@ -8,7 +8,7 @@
     <style>
         .loader {
             border: 4px solid #f3f3f3;
-            border-top: 4px solid #3ecf8e;
+            border-top: 4px solid #2563eb;
             border-radius: 50%;
             width: 24px;
             height: 24px;
@@ -21,6 +21,9 @@
 <body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
 
     <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <div class="text-center mb-6">
+            <img src="/assets/img/logo.png" alt="Trentech Logo" class="h-16 mx-auto">
+        </div>
         <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Definir Nova Senha</h2>
         
         <div id="loading" class="text-center py-4">
@@ -55,7 +58,7 @@
             </div>
 
             <div class="flex items-center justify-between">
-                <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full transition duration-300" type="submit" id="submit-btn">
+                <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full transition duration-150" type="submit" id="submit-btn">
                     Atualizar Senha
                 </button>
             </div>
@@ -79,7 +82,7 @@
     <script>
         const API_URL = 'https://supabase.trentech.com.br'; 
         
-        // IMPORTANTE: Substitua esta chave pela sua ANON KEY correta do arquivo .env (ANON_KEY)
+        // IMPORTANTE: Substitua 'YOUR_ANON_KEY_HERE' pela sua chave ANON_KEY real do arquivo .env
         const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlzcyI6InN1cGFiYXNlIiwiaWF0IjoxNzUwMzg4NDAwLCJleHAiOjE5MDgxNTQ4MDB9.d_PrlhP23K6wk44arHZPoU-N-33n1TteXs-PP3bCOoo';
 
         function log(msg) {
@@ -96,6 +99,13 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             log('Recovery Page Loaded');
+
+            // Verify Key Configuration
+            if (ANON_KEY === 'YOUR_ANON_KEY_HERE' || ANON_KEY.length < 20) {
+                alert('CONFIGURAÇÃO NECESSÁRIA: Por favor, edite o arquivo recovery.html e insira sua ANON_KEY correta na linha 86.');
+                log('ERROR: ANON_KEY not configured.');
+            }
+
             // Parse hash params
             const hash = window.location.hash.substring(1);
             const params = new URLSearchParams(hash);
@@ -207,9 +217,6 @@
 
                     form.classList.add('hidden');
                     successDiv.classList.remove('hidden');
-
-                    // Redirect removed to avoid going to Supabase Studio (mapped to /)
-                    // The user will see the success message and can close the tab/app manually.
 
                 } catch (err) {
                     log(`Catch Error: ${err.message}`);
