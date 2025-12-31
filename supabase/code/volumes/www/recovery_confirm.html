@@ -6,19 +6,19 @@
     <title>Redefinir Senha - TRENTECH</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #121212; color: #e0e0e0; }
-        .bg-card { background-color: #1e1e1e; }
+        /* Light mode default */
+        body { background-color: #ffffff; color: #0f172a; }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
-    <div class="bg-card p-8 rounded-lg shadow-lg w-full max-w-md text-center">
+    <div class="bg-slate-50 p-8 rounded-lg shadow-lg w-full max-w-md text-center">
         <div class="mb-6">
-            <img src="/assets/img/logo-white.png" alt="Trentech Logo" class="h-16 mx-auto">
+            <img src="/assets/img/logo-horizontal.png" alt="Trentech Logo" class="h-16 mx-auto">
         </div>
-        <h1 class="text-2xl font-bold text-white mb-4">Redefinir Senha</h1>
-        <p class="text-gray-400 mb-8">Você solicitou a recuperação de senha. Clique no botão abaixo para prosseguir e criar uma nova senha.</p>
+        <h1 class="text-2xl font-bold text-slate-900 mb-4">Redefinir Senha</h1>
+        <p class="text-slate-500 mb-8">Você solicitou a recuperação de senha. Clique no botão abaixo para prosseguir e criar uma nova senha.</p>
         
-        <button id="confirmBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded transition duration-200 shadow-md">
+        <button id="confirmBtn" class="w-full bg-cyan-400 hover:bg-cyan-500 text-white font-bold py-3 px-4 rounded transition duration-200 shadow-md">
             Redefinir Minha Senha
         </button>
 
@@ -27,8 +27,8 @@
             <div id="logs" class="space-y-1"></div>
         </div>
 
-        <div class="mt-8 text-xs text-gray-600">
-            &copy; 2025 TRENTECH | <button onclick="document.getElementById('debugInfo').classList.remove('hidden')" class="hover:text-gray-400 transition-colors">Show Logs</button>
+        <div class="mt-8 text-xs text-slate-400">
+            &copy; 2025 TRENTECH | <button onclick="document.getElementById('debugInfo').classList.remove('hidden')" class="hover:text-slate-600 transition-colors">Show Logs</button>
         </div>
     </div>
 

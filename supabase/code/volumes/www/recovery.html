@@ -8,7 +8,7 @@
     <style>
         .loader {
             border: 4px solid #f3f3f3;
-            border-top: 4px solid #2563eb;
+            border-top: 4px solid #22d3ee;
             border-radius: 50%;
             width: 24px;
             height: 24px;
@@ -18,17 +18,17 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+<body class="bg-white min-h-screen flex items-center justify-center p-4">
 
-    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+    <div class="bg-slate-50 p-8 rounded-lg shadow-md w-full max-w-md">
         <div class="text-center mb-6">
-            <img src="/assets/img/logo.png" alt="Trentech Logo" class="h-16 mx-auto">
+            <img src="/assets/img/logo-horizontal.png" alt="Trentech Logo" class="h-16 mx-auto">
         </div>
-        <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Definir Nova Senha</h2>
+        <h2 class="text-2xl font-bold mb-6 text-center text-slate-900">Definir Nova Senha</h2>
         
         <div id="loading" class="text-center py-4">
             <div class="loader"></div>
-            <p class="mt-2 text-gray-600">Verificando link...</p>
+            <p class="mt-2 text-slate-500">Verificando link...</p>
         </div>
 
         <div id="error-msg" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
@@ -43,22 +43,22 @@
 
         <form id="password-form" class="hidden">
             <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
+                <label class="block text-slate-700 text-sm font-bold mb-2" for="password">
                     Nova Senha
                 </label>
-                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password" placeholder="********" required minlength="6" autocomplete="new-password">
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-slate-700 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password" placeholder="********" required minlength="6" autocomplete="new-password">
             </div>
             
             <div class="mb-6">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="confirm-password">
+                <label class="block text-slate-700 text-sm font-bold mb-2" for="confirm-password">
                     Confirmar Senha
                 </label>
-                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline transition-colors duration-200" id="confirm-password" type="password" placeholder="********" required autocomplete="new-password">
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-slate-700 leading-tight focus:outline-none focus:shadow-outline transition-colors duration-200" id="confirm-password" type="password" placeholder="********" required autocomplete="new-password">
                 <p id="password-match-msg" class="text-xs mt-1 hidden"></p>
             </div>
 
             <div class="flex items-center justify-between">
-                <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full transition duration-150" type="submit" id="submit-btn">
+                <button class="bg-cyan-400 hover:bg-cyan-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full transition duration-150" type="submit" id="submit-btn">
                     Atualizar Senha
                 </button>
             </div>
