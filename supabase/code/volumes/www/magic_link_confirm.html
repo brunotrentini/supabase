@@ -59,24 +59,15 @@
             return;
         }
 
-        // 2. DEFINE THE FINAL DESTINATION
-        // e.g. https://app.trentech.com.br
-        const frontendUrl = window.location.origin; 
-        
-        // If we have a param, use it. Otherwise, fallback to /dashboard
-        // Result: https://app.trentech.com.br/accept-invite
-        const finalRedirect = redirectParam 
-            ? (redirectParam.startsWith('http') ? redirectParam : `${frontendUrl}${redirectParam}`)
-            : `${frontendUrl}/dashboard`;
-
         // 3. DEFINE SUPABASE URL
         // IMPORTANT: Change this if your Auth server is on a different subdomain!
         // If your page is at app.trentech.com.br, but auth is at supabase.trentech.com.br:
-        const supabaseAuthUrl = "https://supabase.trentech.com.br"; 
+        const supabaseAuthUrl = window.location.origin;
 
+        const finalDestination = redirectParam ? redirectParam : defaultFrontend;
         // 4. CONSTRUCT THE VERIFY URL
         // We send the user to Supabase, Supabase verifies, then sends them to finalRedirect
-        const targetUrl = `${supabaseAuthUrl}/auth/v1/verify?token=${token}&type=${type}&redirect_to=${encodeURIComponent(finalRedirect)}`;
+        const targetUrl = `${supabaseAuthUrl}/auth/v1/verify?token=${token}&type=${type}&redirect_to=${encodeURIComponent(finalDestination)}`;
         
         log(`Target URL: ${targetUrl}`);
         
