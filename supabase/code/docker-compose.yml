@@ -12,18 +12,6 @@ services:
   studio:
     image: supabase/studio:2025.05.19-sha-3487831
     restart: always
-    healthcheck:
-      test:
-        [
-          "CMD",
-          "node",
-          "-e",
-          "fetch('http://studio:3000/api/platform/profile').then((r) => {if
-            (r.status !== 200) throw new Error(r.status)})"
-        ]
-      timeout: 20s # Aumentado de 10s para 20s
-      interval: 10s # Aumentado de 5s para 10s
-      retries: 10 # Aumentado de 3 para 10
     depends_on:
       analytics:
         condition: service_healthy
@@ -51,7 +39,7 @@ services:
 
   kong:
     image: kong:2.8.1
-    restart: unless-stopped
+    restart: always
     volumes:
       # https://github.com/supabase/supabase/issues/12661
       - ./volumes/api/kong.yml:/home/kong/temp.yml:ro,z
@@ -76,7 +64,7 @@ services:
 
   auth:
     image: supabase/gotrue:v2.172.1
-    restart: unless-stopped
+    restart: always
     volumes:
       - ./volumes/auth/templates:/etc/gotrue/templates:ro,z
     healthcheck:
@@ -162,7 +150,7 @@ services:
 
   rest:
     image: postgrest/postgrest:v12.2.12
-    restart: unless-stopped
+    restart: always
     depends_on:
       db:
         # Disable this if you are using an external Postgres database
@@ -182,7 +170,7 @@ services:
   realtime:
     # This container name looks inconsistent but is correct because realtime constructs tenant id by parsing the subdomain
     image: supabase/realtime:v2.34.47
-    restart: unless-stopped
+    restart: always
     depends_on:
       db:
         # Disable this if you are using an external Postgres database
@@ -226,7 +214,7 @@ services:
   # To use S3 backed storage: docker compose -f docker-compose.yml -f docker-compose.s3.yml up
   storage:
     image: supabase/storage-api:v1.22.17
-    restart: unless-stopped
+    restart: always
     volumes:
       - ./volumes/storage:/var/lib/storage:z
     healthcheck:
@@ -268,7 +256,7 @@ services:
 
   imgproxy:
     image: darthsim/imgproxy:v3.8.0
-    restart: unless-stopped
+    restart: always
     volumes:
       - ./volumes/storage:/var/lib/storage:z
     healthcheck:
@@ -284,7 +272,7 @@ services:
 
   meta:
     image: supabase/postgres-meta:v0.89.0
-    restart: always # Mudado de unless-stopped para always para garantir que ele volte se cair
+    restart: always
     depends_on:
       db:
         # Disable this if you are using an external Postgres database
@@ -358,7 +346,7 @@ services:
 
       # Comment out everything below this point if you are using an external Postgres database
   db:
-    image: supabase/postgres:15.8.1.060
+    image: supabase/postgres:17.2.1.002
     restart: unless-stopped
     volumes:
       - ./volumes/db/realtime.sql:/docker-entrypoint-initdb.d/migrations/99-realtime.sql:Z
@@ -396,6 +384,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXP: ${JWT_EXPIRY}
+      PGDATA: /var/lib/postgresql/data
     command:
       [
         "postgres",
@@ -407,7 +396,7 @@ services:
 
   vector:
     image: timberio/vector:0.28.1-alpine
-    restart: unless-stopped
+    restart: always
     volumes:
       - ./volumes/logs/vector.yml:/etc/vector/vector.yml:ro,z
       - ${DOCKER_SOCKET_LOCATION}:/var/run/docker.sock:ro,z
