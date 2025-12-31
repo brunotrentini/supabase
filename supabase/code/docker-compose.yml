@@ -11,7 +11,7 @@ services:
 
   studio:
     image: supabase/studio:2025.05.19-sha-3487831
-    restart: unless-stopped
+    restart: always
     healthcheck:
       test:
         [
@@ -21,9 +21,9 @@ services:
           "fetch('http://studio:3000/api/platform/profile').then((r) => {if
             (r.status !== 200) throw new Error(r.status)})"
         ]
-      timeout: 10s
-      interval: 5s
-      retries: 3
+      timeout: 20s # Aumentado de 10s para 20s
+      interval: 10s # Aumentado de 5s para 10s
+      retries: 10 # Aumentado de 3 para 10
     depends_on:
       analytics:
         condition: service_healthy
@@ -284,7 +284,7 @@ services:
 
   meta:
     image: supabase/postgres-meta:v0.89.0
-    restart: unless-stopped
+    restart: always # Mudado de unless-stopped para always para garantir que ele volte se cair
     depends_on:
       db:
         # Disable this if you are using an external Postgres database
