@@ -33,50 +33,59 @@
     </div>
 
     <script>
-        function log(msg) {
-            console.log('[MagicLinkConfirm]', msg);
-            const logs = document.getElementById('logs');
-            const entry = document.createElement('div');
-            entry.textContent = `> ${msg}`;
-            logs.appendChild(entry);
+    function log(msg) {
+        console.log('[MagicLinkConfirm]', msg);
+        const logs = document.getElementById('logs');
+        const entry = document.createElement('div');
+        entry.textContent = `> ${msg}`;
+        logs.appendChild(entry);
+    }
+
+    document.getElementById('confirmBtn').addEventListener('click', function() {
+        const params = new URLSearchParams(window.location.search);
+        const token = params.get('token');
+        const type = params.get('type') || 'magiclink';
+        
+        // 1. GET THE REDIRECT PARAMETER
+        // This comes from your backend: ?redirect_to=/accept-invite
+        const redirectParam = params.get('redirect_to');
+        
+        log(`Token: ${token}`);
+        log(`Type: ${type}`);
+        log(`Redirect Param: ${redirectParam}`);
+
+        if (!token) {
+            alert('Token inválido ou expirado (Vazio).');
+            return;
         }
 
-        document.getElementById('confirmBtn').addEventListener('click', function() {
-            const params = new URLSearchParams(window.location.search);
-            const token = params.get('token');
-            const type = params.get('type') || 'magiclink';
-            const redirect_to = params.get('redirect_to');
-            
-            log(`Token Length: ${token ? token.length : 0}`);
-            log(`Token: ${token}`);
-            log(`Type: ${type}`);
+        // 2. DEFINE THE FINAL DESTINATION
+        // e.g. https://app.trentech.com.br
+        const frontendUrl = window.location.origin; 
+        
+        // If we have a param, use it. Otherwise, fallback to /dashboard
+        // Result: https://app.trentech.com.br/accept-invite
+        const finalRedirect = redirectParam 
+            ? (redirectParam.startsWith('http') ? redirectParam : `${frontendUrl}${redirectParam}`)
+            : `${frontendUrl}/dashboard`;
 
-            if (!token) {
-                alert('Token inválido ou expirado (Vazio).');
-                log('Error: Token is empty');
-                return;
-            }
+        // 3. DEFINE SUPABASE URL
+        // IMPORTANT: Change this if your Auth server is on a different subdomain!
+        // If your page is at app.trentech.com.br, but auth is at supabase.trentech.com.br:
+        const supabaseAuthUrl = "https://supabase.trentech.com.br"; 
 
-            // Check if token looks like a SHA256 hash (64 chars hex)
-            if (token.length === 64 && /^[0-9a-fA-F]+$/.test(token)) {
-                log('WARNING: Token appears to be a SHA256 Hash! The email template might be using {{ .TokenHash }} instead of {{ .Token }}.');
-                alert('Aviso: O token parece ser um hash. Verifique se o template de e-mail foi atualizado corretamente.');
-            }
+        // 4. CONSTRUCT THE VERIFY URL
+        // We send the user to Supabase, Supabase verifies, then sends them to finalRedirect
+        const targetUrl = `${supabaseAuthUrl}/auth/v1/verify?token=${token}&type=${type}&redirect_to=${encodeURIComponent(finalRedirect)}`;
+        
+        log(`Target URL: ${targetUrl}`);
+        
+        // Redirect
+        window.location.href = targetUrl;
+    });
 
-            // Constrói a URL da API do Supabase
-            // Redireciona para /welcome após o sucesso
-            const baseUrl = window.location.origin;
-            const targetUrl = `${baseUrl}/auth/v1/verify?token=${token}&type=${type}&redirect_to=${encodeURIComponent(baseUrl + '/welcome')}`;
-            
-            log(`Target URL: ${targetUrl}`);
-            
-            window.location.href = targetUrl;
-        });
-
-        // Auto-log on load
-        const params = new URLSearchParams(window.location.search);
-        log('Page Loaded');
-        log(`Params: ${window.location.search}`);
-    </script>
+    // Auto-log on load
+    log('Page Loaded');
+</script>
 </body>
 </html>

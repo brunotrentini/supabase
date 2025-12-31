@@ -31,11 +31,11 @@
             <p>Para aceitar o convite e configurar sua conta, clique no botão abaixo:</p>
             
             <div style="text-align: center;">
-                <a href="{{ .SiteURL }}/magic-link-confirm?token={{ .Token }}&type=invite" class="button">Aceitar Convite</a>
+                <a href="{{ .SiteURL }}/magic-link-confirm?token={{ .Token }}&type=invite&redirect_to=/accept-invite" class="button">Aceitar Convite</a>
             </div>
 
             <p style="font-size: 14px; color: #6b7280; margin-top: 20px;">Se o botão não funcionar, copie e cole o link abaixo no seu navegador:</p>
-            <p style="font-size: 13px;"><a href="{{ .SiteURL }}/magic-link-confirm?token={{ .Token }}&type=invite" class="link">{{ .SiteURL }}/magic-link-confirm?token={{ .Token }}&type=invite</a></p>
+            <p style="font-size: 13px;"><a href="{{ .SiteURL }}/magic-link-confirm?token={{ .Token }}&type=invite&redirect_to=/accept-invite" class="link">{{ .SiteURL }}/magic-link-confirm?token={{ .Token }}&type=invite&redirect_to=/accept-invite</a></p>
             
             <p style="font-size: 14px; margin-top: 24px; color: #6b7280;">Se você não esperava este convite, pode ignorar este e-mail.</p>
         </div>
