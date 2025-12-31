@@ -162,7 +162,7 @@ services:
 
   rest:
     image: postgrest/postgrest:v12.2.12
-    restart: always # Mudado de unless-stopped para always para forçar retentativa em caso de falha inicial
+    restart: unless-stopped
     depends_on:
       db:
         # Disable this if you are using an external Postgres database
@@ -382,7 +382,7 @@ services:
       test: [ "CMD", "pg_isready", "-U", "postgres", "-h", "localhost" ]
       interval: 5s
       timeout: 5s
-      retries: 20 # Aumentado de 10 para 20 para dar mais tempo de boot na VPS
+      retries: 10
     depends_on:
       vector:
         condition: service_healthy
