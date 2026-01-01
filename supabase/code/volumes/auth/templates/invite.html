@@ -20,13 +20,13 @@
         <p style="color:#cbd5e1;margin-bottom:25px;">Para aceitar o convite e configurar sua conta, clique no botão abaixo:</p>
         
         <div style="text-align:center;margin:30px 0;">
-            <a href="{{ .SiteURL }}/magic-link-confirm?token={{ .Token }}&type=invite&redirect_to=/accept-invite" style="background-color:#06b6d4;color:#0f172a;text-decoration:none;padding:14px 32px;border-radius:6px;font-weight:bold;font-size:16px;display:inline-block;">
+            <a href="{{ .SiteURL }}/magic-link-confirm?token={{ .TokenHash }}&type=invite&redirect_to=/accept-invite" style="background-color:#06b6d4;color:#0f172a;text-decoration:none;padding:14px 32px;border-radius:6px;font-weight:bold;font-size:16px;display:inline-block;">
                 Aceitar Convite
             </a>
         </div>
 
         <p style="color:#94a3b8;font-size:14px;margin-bottom:10px;">Se o botão não funcionar, copie e cole o link abaixo:</p>
-        <p style="font-size:13px;word-break:break-all;"><a href="{{ .SiteURL }}/magic-link-confirm?token={{ .Token }}&type=invite&redirect_to=/accept-invite" style="color:#22d3ee;">{{ .SiteURL }}/magic-link-confirm?token={{ .Token }}&type=invite&redirect_to=/accept-invite</a></p>
+        <p style="font-size:13px;word-break:break-all;"><a href="{{ .SiteURL }}/magic-link-confirm?token={{ .TokenHash }}&type=invite&redirect_to=/accept-invite" style="color:#22d3ee;">{{ .SiteURL }}/magic-link-confirm?token={{ .Token }}&type=invite&redirect_to=/accept-invite</a></p>
         
         <p style="color:#94a3b8;font-size:14px;margin-top:30px;border-top:1px solid #334155;padding-top:20px;">
             Se você não esperava este convite, pode ignorar este e-mail.
