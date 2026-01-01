@@ -123,19 +123,10 @@ services:
       GOTRUE_MAILER_URLPATHS_CONFIRMATION: ${MAILER_URLPATHS_CONFIRMATION}
       GOTRUE_MAILER_URLPATHS_RECOVERY: ${MAILER_URLPATHS_RECOVERY}
       GOTRUE_MAILER_URLPATHS_EMAIL_CHANGE: ${MAILER_URLPATHS_EMAIL_CHANGE}
-      GOTRUE_MAILER_TEMPLATES_RECOVERY: /etc/gotrue/templates/recovery.html
-      GOTRUE_MAILER_TEMPLATES_MAGIC_LINK: /etc/gotrue/templates/magic_link.html
-      # GOTRUE_MAILER_TEMPLATES_INVITE: /etc/gotrue/templates/invite.html
-      GOTRUE_MAILER_SUBJECTS_INVITE: "Convite Trentech (TESTE)"
-      GOTRUE_MAILER_TEMPLATES_INVITE_CONTENT: >-
-        <!DOCTYPE html>
-        <html>
-        <body>
-          <h2>Convite Trentech</h2>
-          <p>Você foi convidado. Clique abaixo:</p>
-          <p><a href="{{ .ConfirmationURL }}">Aceitar Convite</a></p>
-        </body>
-        </html>
+      GOTRUE_MAILER_TEMPLATES_RECOVERY: ${GOTRUE_MAILER_TEMPLATES_RECOVERY}
+      GOTRUE_MAILER_TEMPLATES_MAGIC_LINK: ${GOTRUE_MAILER_TEMPLATES_MAGIC_LINK}
+      GOTRUE_MAILER_SUBJECTS_RECOVERY: ${GOTRUE_MAILER_SUBJECTS_RECOVERY}
+      GOTRUE_MAILER_SUBJECTS_MAGIC_LINK: ${GOTRUE_MAILER_SUBJECTS_MAGIC_LINK}
       GOTRUE_EXTERNAL_PHONE_ENABLED: ${ENABLE_PHONE_SIGNUP}
       GOTRUE_SMS_AUTOCONFIRM: ${ENABLE_PHONE_AUTOCONFIRM}
       # Uncomment to enable custom access token hook. Please see: https://supabase.com/docs/guides/auth/auth-hooks for full list of hooks and additional details about custom_access_token_hook
