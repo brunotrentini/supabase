@@ -19,13 +19,13 @@
         <p style="color:#cbd5e1;margin-bottom:25px;">Recebemos uma solicitação para redefinir a senha da sua conta na <strong>SuperBox</strong>.</p>
         
         <div style="text-align:center;margin:30px 0;">
-            <a href="{{ .SiteURL }}/recovery-confirm?token={{ .Token }}&type=recovery" style="background-color:#06b6d4;color:#0f172a;text-decoration:none;padding:14px 32px;border-radius:6px;font-weight:bold;font-size:16px;display:inline-block;">
+            <a href="{{ .SiteURL }}/magic-link-confirm?token={{ .TokenHash }}&type=recovery&redirect_to=/accept-invite" style="background-color:#06b6d4;color:#0f172a;text-decoration:none;padding:14px 32px;border-radius:6px;font-weight:bold;font-size:16px;display:inline-block;">
                 Redefinir Minha Senha
             </a>
         </div>
         
-        <p style="color:#cbd5e1;margin-bottom:10px;">Ou utilize o código de verificação abaixo:</p>
-        <p style="font-size:24px;font-weight:bold;letter-spacing:4px;color:#22d3ee;text-align:center;margin:10px 0 20px 0;background:#0f172a;padding:10px;border-radius:4px;">{{ .Token }}</p>
+        <!-- <p style="color:#cbd5e1;margin-bottom:10px;">Ou utilize o código de verificação abaixo:</p>
+        <p style="font-size:24px;font-weight:bold;letter-spacing:4px;color:#22d3ee;text-align:center;margin:10px 0 20px 0;background:#0f172a;padding:10px;border-radius:4px;">{{ .Token }}</p> -->
 
         <p style="color:#94a3b8;font-size:14px;margin-top:30px;border-top:1px solid #334155;padding-top:20px;">
             Se você não solicitou esta alteração, ignore este e-mail.
