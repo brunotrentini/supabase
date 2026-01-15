@@ -63,7 +63,10 @@ services:
       /docker-entrypoint.sh kong docker-start'
 
   auth:
-    image: supabase/gotrue:v2.172.1
+    build:
+      context: ./auth_service
+      dockerfile: Dockerfile
+    image: supabase/gotrue:custom-webhook
     restart: always
     volumes:
       - ./volumes/auth/templates:/etc/gotrue/templates:ro,z
@@ -97,6 +100,7 @@ services:
       GOTRUE_SITE_URL: ${SITE_URL}
       GOTRUE_URI_ALLOW_LIST: ${ADDITIONAL_REDIRECT_URLS}
       GOTRUE_DISABLE_SIGNUP: ${DISABLE_SIGNUP}
+      AUTH_WEBHOOK_URL: ${AUTH_WEBHOOK_URL}
 
       GOTRUE_JWT_ADMIN_ROLES: service_role
       GOTRUE_JWT_AUD: authenticated
