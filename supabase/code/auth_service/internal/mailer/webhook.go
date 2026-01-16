@@ -24,11 +24,12 @@ func (m *TemplateMailer) sendAuthWebhook(eventType string, user *models.User, li
 		defer cancel()
 
 		payload := map[string]interface{}{
-			"event":     eventType,
-			"user_id":   user.ID,
-			"email":     user.Email,
-			"link":      link,
-			"timestamp": time.Now().UTC(),
+			"event":         eventType,
+			"user_id":       user.ID,
+			"email":         user.Email,
+			"user_metadata": user.UserMetaData,
+			"link":          link,
+			"timestamp":     time.Now().UTC(),
 		}
 
 		jsonData, err := json.Marshal(payload)
