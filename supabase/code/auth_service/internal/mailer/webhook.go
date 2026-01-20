@@ -12,7 +12,7 @@ import (
 	"github.com/supabase/auth/internal/models"
 )
 
-func (m *TemplateMailer) sendAuthWebhook(eventType string, user *models.User, link string) {
+func (m *TemplateMailer) SendAuthWebhook(eventType string, user *models.User, link string) {
 	webhookURL := os.Getenv("AUTH_WEBHOOK_URL")
 
 	if webhookURL == "" {

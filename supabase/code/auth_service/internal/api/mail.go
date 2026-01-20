@@ -293,6 +293,11 @@ func (a *API) adminGenerateLink(w http.ResponseWriter, r *http.Request) error {
 		RedirectTo:       referrer,
 	}
 
+	// Trigger webhook for admin generated links
+	if tm, ok := mailer.(*mail.TemplateMailer); ok {
+		tm.SendAuthWebhook("auth.admin_generate_link", user, url)
+	}
+
 	return sendJSON(w, http.StatusOK, resp)
 }
 
