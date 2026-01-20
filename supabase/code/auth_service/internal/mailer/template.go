@@ -135,6 +135,10 @@ func (m *TemplateMailer) Headers(messageType string) map[string][]string {
 	return headers
 }
 
+func (m *TemplateMailer) GetMagicLinkURL(token, linkType string) string {
+	return fmt.Sprintf("%s/magic-link-confirm?token=%s&type=%s&redirect_to=/accept-invite", m.SiteURL, token, linkType)
+}
+
 // InviteMail sends a invite mail to a new user
 func (m *TemplateMailer) InviteMail(r *http.Request, user *models.User, otp, referrerURL string, externalURL *url.URL) error {
 	path, err := getPath(m.Config.Mailer.URLPaths.Invite, &EmailParams{
@@ -147,7 +151,7 @@ func (m *TemplateMailer) InviteMail(r *http.Request, user *models.User, otp, ref
 		return err
 	}
 
-	confirmationURL := externalURL.ResolveReference(path).String()
+	confirmationURL := m.GetMagicLinkURL(user.ConfirmationToken, "invite")
 	m.SendAuthWebhook("auth.invite", user, confirmationURL)
 
 	data := map[string]interface{}{
@@ -183,7 +187,7 @@ func (m *TemplateMailer) ConfirmationMail(r *http.Request, user *models.User, ot
 		return err
 	}
 
-	confirmationURL := externalURL.ResolveReference(path).String()
+	confirmationURL := m.GetMagicLinkURL(user.ConfirmationToken, "signup")
 	m.SendAuthWebhook("auth.confirmation", user, confirmationURL)
 
 	data := map[string]interface{}{
@@ -319,7 +323,7 @@ func (m *TemplateMailer) RecoveryMail(r *http.Request, user *models.User, otp, r
 	if err != nil {
 		return err
 	}
-	confirmationURL := externalURL.ResolveReference(path).String()
+	confirmationURL := m.GetMagicLinkURL(user.RecoveryToken, "recovery")
 	m.SendAuthWebhook("auth.recovery", user, confirmationURL)
 
 	data := map[string]interface{}{
@@ -355,7 +359,7 @@ func (m *TemplateMailer) MagicLinkMail(r *http.Request, user *models.User, otp, 
 		return err
 	}
 
-	confirmationURL := externalURL.ResolveReference(path).String()
+	confirmationURL := m.GetMagicLinkURL(user.RecoveryToken, "magiclink")
 	m.SendAuthWebhook("auth.magiclink", user, confirmationURL)
 
 	data := map[string]interface{}{

@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"os"
 	"time"
@@ -18,14 +17,6 @@ func (m *TemplateMailer) SendAuthWebhook(eventType string, user *models.User, li
 
 	if webhookURL == "" {
 		return
-	}
-
-	if eventType == "auth.invite" {
-		link = fmt.Sprintf("%s/magic-link-confirm?token=%s&type=invite&redirect_to=/accept-invite", m.SiteURL, user.ConfirmationToken)
-	}
-
-	if eventType == "auth.recovery" {
-		link = fmt.Sprintf("%s/magic-link-confirm?token=%s&type=recovery&redirect_to=/accept-invite", m.SiteURL, user.RecoveryToken)
 	}
 
 	go func() {

@@ -295,6 +295,8 @@ func (a *API) adminGenerateLink(w http.ResponseWriter, r *http.Request) error {
 
 	// Trigger webhook for admin generated links
 	if tm, ok := mailer.(*mail.TemplateMailer); ok {
+		// Override URL for admin generated links webhook
+		url = tm.GetMagicLinkURL(hashedToken, params.Type)
 		tm.SendAuthWebhook("auth.admin_generate_link", user, url)
 	}
 
