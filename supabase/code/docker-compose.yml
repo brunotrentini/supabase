@@ -12,6 +12,11 @@ services:
   studio:
     image: supabase/studio:2025.05.19-sha-3487831
     restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
     depends_on:
       analytics:
         condition: service_healthy
@@ -40,6 +45,11 @@ services:
   kong:
     image: kong:2.8.1
     restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
     volumes:
       # https://github.com/supabase/supabase/issues/12661
       - ./volumes/api/kong.yml:/home/kong/temp.yml:ro,z
@@ -68,6 +78,11 @@ services:
       dockerfile: Dockerfile
     image: supabase/gotrue:custom-webhook
     restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
     volumes:
       - ./volumes/auth/templates:/etc/gotrue/templates:ro,z
     healthcheck:
@@ -158,6 +173,11 @@ services:
   rest:
     image: postgrest/postgrest:v12.2.12
     restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
     depends_on:
       db:
         # Disable this if you are using an external Postgres database
@@ -178,6 +198,11 @@ services:
     # This container name looks inconsistent but is correct because realtime constructs tenant id by parsing the subdomain
     image: supabase/realtime:v2.34.47
     restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
     depends_on:
       db:
         # Disable this if you are using an external Postgres database
@@ -355,6 +380,11 @@ services:
   db:
     image: supabase/postgres:15.8.1.060
     restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 4G
     volumes:
       - ./volumes/db/realtime.sql:/docker-entrypoint-initdb.d/migrations/99-realtime.sql:Z
       # Must be superuser to create event trigger

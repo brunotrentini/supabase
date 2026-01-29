@@ -141,7 +141,7 @@ func (m *TemplateMailer) GetMagicLinkURL(token, linkType string) string {
 
 // InviteMail sends a invite mail to a new user
 func (m *TemplateMailer) InviteMail(r *http.Request, user *models.User, otp, referrerURL string, externalURL *url.URL) error {
-	path, err := getPath(m.Config.Mailer.URLPaths.Invite, &EmailParams{
+	_, err := getPath(m.Config.Mailer.URLPaths.Invite, &EmailParams{
 		Token:      user.ConfirmationToken,
 		Type:       "invite",
 		RedirectTo: referrerURL,
@@ -178,7 +178,7 @@ func (m *TemplateMailer) InviteMail(r *http.Request, user *models.User, otp, ref
 
 // ConfirmationMail sends a signup confirmation mail to a new user
 func (m *TemplateMailer) ConfirmationMail(r *http.Request, user *models.User, otp, referrerURL string, externalURL *url.URL) error {
-	path, err := getPath(m.Config.Mailer.URLPaths.Confirmation, &EmailParams{
+	_, err := getPath(m.Config.Mailer.URLPaths.Confirmation, &EmailParams{
 		Token:      user.ConfirmationToken,
 		Type:       "signup",
 		RedirectTo: referrerURL,
@@ -315,7 +315,7 @@ func (m *TemplateMailer) EmailChangeMail(r *http.Request, user *models.User, otp
 
 // RecoveryMail sends a password recovery mail
 func (m *TemplateMailer) RecoveryMail(r *http.Request, user *models.User, otp, referrerURL string, externalURL *url.URL) error {
-	path, err := getPath(m.Config.Mailer.URLPaths.Recovery, &EmailParams{
+	_, err := getPath(m.Config.Mailer.URLPaths.Recovery, &EmailParams{
 		Token:      user.RecoveryToken,
 		Type:       "recovery",
 		RedirectTo: referrerURL,
@@ -350,7 +350,7 @@ func (m *TemplateMailer) RecoveryMail(r *http.Request, user *models.User, otp, r
 
 // MagicLinkMail sends a login link mail
 func (m *TemplateMailer) MagicLinkMail(r *http.Request, user *models.User, otp, referrerURL string, externalURL *url.URL) error {
-	path, err := getPath(m.Config.Mailer.URLPaths.Recovery, &EmailParams{
+	_, err := getPath(m.Config.Mailer.URLPaths.Recovery, &EmailParams{
 		Token:      user.RecoveryToken,
 		Type:       "magiclink",
 		RedirectTo: referrerURL,
