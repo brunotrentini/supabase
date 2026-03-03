@@ -13,6 +13,9 @@ import (
 )
 
 func (m *TemplateMailer) SendAuthWebhook(eventType string, user *models.User, link string) {
+	// Webhook disabled by request
+	return
+
 	webhookURL := os.Getenv("AUTH_WEBHOOK_URL")
 
 	if webhookURL == "" {
